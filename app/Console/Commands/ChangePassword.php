@@ -5,22 +5,21 @@ namespace App\Console\Commands;
 use App\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
-
-class RegisterUser extends Command
+class ChangePassword extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'register:user'; //Command will be called as php artisan register:user
+    protected $signature = 'user:change-password'; //Command will be called as php artisan register:change-password
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Add a new user from the command line.';
+    protected $description = 'change a user password';
 
     /**
      * User model.
@@ -47,8 +46,8 @@ class RegisterUser extends Command
     public function handle()
     {
         $details = $this->getDetails();
-        $admin = $this->user->createUser($details);
-        $this->display($admin);
+        $admin = $this->user->changePassword($details);
+        $this->display();
     }
 
     /**
@@ -59,11 +58,12 @@ class RegisterUser extends Command
     private function getDetails() : array
     {
         $details['email'] = $this->ask('Email');
-        $details['password'] = $this->secret('Password');
+        $details['current_password'] = $this->secret('Current Password');
+        $details['password'] = $this->secret('New Password');
         $details['confirm_password'] = $this->secret('Confirm password');
-        while (! $this->isValidPassword($details['email'], $details['password'], $details['confirm_password'])) {
-            if (! $this->existEmail($details['email'])) {
-                $this->error('The email has already been taken');
+        while (! $this->isValid($details['email'], $details['current_password'], $details['password'], $details['confirm_password'])) {
+            if (! $this->existAccount($details['email'], $details['current_password'])) {
+                $this->error('Email and password do not match our records.');
             }
             if (! $this->isEmail($details['email'])) {
                 $this->error('Invalid email format');
@@ -75,26 +75,22 @@ class RegisterUser extends Command
                 $this->error('Password and Confirm password do not match');
             }
             $details['email'] = $this->ask('Email');
+            $details['current_password'] = $this->secret('Current Password');
             $details['password'] = $this->secret('Password');
             $details['confirm_password'] = $this->secret('Confirm password');
         }
         return $details;
     }
 
-    /**
+        /**
      * Display created user.
      *
      * @param array $user
      * @return void
      */
-    private function display(User $user) : void
+    private function display() : void
     {
-        $headers = ['Email'];
-        $fields = [
-            'email' => $user->email,
-        ];
-        $this->info('User created');
-        $this->table($headers, [$fields]);
+        $this->info('Your password has been updated.');
     }
 
     /**
@@ -104,10 +100,9 @@ class RegisterUser extends Command
      * @param string $confirmPassword
      * @return boolean
      */
-    private function isValidPassword(string $email, string $password, string $confirmPassword) : bool
+    private function isValid(string $email, string $current_password, string $password, string $confirmPassword) : bool
     {
-        return $this->existEmail($email) && $this->isEmail($email) && $this->isRequiredLength($password) &&
-        $this->isMatch($password, $confirmPassword);
+        return $this->existAccount($email, $current_password) && $this->isRequiredLength($password) && $this->isMatch($password, $confirmPassword);
     }
     /**
      * Check if password and confirm password matches.
@@ -145,19 +140,23 @@ class RegisterUser extends Command
     }
 
     /**
-     * Checks if email is exists.
+     * Checks if account is exists.
      *
      * @param string $email
+     * @param string $current_password
      * @return bool
      */
-    private function existEmail(string $email) : bool
+    private function existAccount(string $email, string $current_password) : bool
     {
         $us = User::where('email', $email)->first();
         if ($us === null) {
-            return true;
-        }else{
             return false;
+        }else{
+            if(Hash::check($current_password, $us->password)){
+                return true;
+            }else{
+                return false;
+            }
         }   
     }
-
 }

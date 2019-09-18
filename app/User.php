@@ -56,4 +56,19 @@ class User extends Authenticatable
         return $user;
     }
 
+    /**
+     * Change password.
+     *
+     * @param array $details
+     * @return array
+     */
+    public function changePassword(array $details) : self
+    {
+        $user = User::where('email', $details['email'])
+                        ->first();
+        $user->password = Hash::make($details['password']);
+        $user->save();
+        return $user;
+    }
+
 }
