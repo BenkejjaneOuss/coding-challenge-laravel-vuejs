@@ -64,7 +64,7 @@
     },
     methods: {
       onSubmit() {
-            //Validate form 
+            //Form validation 
             this.$validator.validateAll().then(result => {
                 if (!this.errors.any()) {
 

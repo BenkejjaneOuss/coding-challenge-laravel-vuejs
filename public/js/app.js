@@ -1764,7 +1764,7 @@ __webpack_require__.r(__webpack_exports__);
     onSubmit: function onSubmit() {
       var _this = this;
 
-      //Validate form 
+      //Form validation 
       this.$validator.validateAll().then(function (result) {
         if (!_this.errors.any()) {
           //Axios
