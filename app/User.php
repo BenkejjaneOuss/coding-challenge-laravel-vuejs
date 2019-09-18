@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -40,4 +41,19 @@ class User extends Authenticatable
     public function items() {
         return $this->hasMany('App\Alert');
     }
+
+    /**
+     * Create user.
+     *
+     * @param array $details
+     * @return array
+     */
+    public function createUser(array $details) : self
+    {
+        $user = new self($details);
+        $user->password = Hash::make($details['password']);
+        $user->save();
+        return $user;
+    }
+
 }
