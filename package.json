@@ -26,6 +26,7 @@
     "dependencies": {
         "bootstrap-vue": "^2.0.1",
         "vee-validate": "^2.2.6",
+        "vue-infinite-loading": "^2.4.4",
         "vue-sweetalert2": "^2.1.1"
     }
 }

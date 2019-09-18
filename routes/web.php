@@ -16,9 +16,13 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+//Home page
+Route::get('/home', 'ItemsController@index')->name('home');
+Route::get('/all-items/{page}', 'ItemsController@getItems')->name('getItems');
 
-Route::get('/home', 'HomeController@index')->name('home');
-
-//Change Password 
+//Change password page
 Route::get('/profile', 'profileController@index')->name('profile');
 Route::post('/profile', 'ProfileController@changePassword')->name('changePassword');
+
+//Add items
+Route::get('/add-item', 'ItemsController@index')->name('addItem');

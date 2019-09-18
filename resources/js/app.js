@@ -26,8 +26,20 @@ Vue.use(VeeValidate);
 import VueSweetalert2 from 'vue-sweetalert2';
 Vue.use(VueSweetalert2);
 
+//Vue-infinite-loading
+import InfiniteLoading from 'vue-infinite-loading';
+
+Vue.use(InfiniteLoading, { props: {
+    spinner: 'default',
+    /* other props need to configure */
+  },
+  system: {
+    throttleLimit: 50,
+    /* other settings need to configure */
+  }, });
 
 //Components
+Vue.component('home', require('./components/items/Home.vue').default);
 Vue.component('change-password', require('./components/auth/ChangePassword.vue').default);
 
 /**
