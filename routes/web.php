@@ -25,4 +25,5 @@ Route::get('/profile', 'profileController@index')->name('profile');
 Route::post('/profile', 'ProfileController@changePassword')->name('changePassword');
 
 //Add items
-Route::get('/add-item', 'ItemsController@index')->name('addItem');
+Route::get('/add-item', 'ItemsController@create')->name('addItem');
+Route::post('/add-item', 'ItemsController@store')->name('addItem');

@@ -34,12 +34,13 @@ Vue.use(InfiniteLoading, { props: {
     /* other props need to configure */
   },
   system: {
-    throttleLimit: 50,
+    throttleLimit: 500,
     /* other settings need to configure */
   }, });
 
 //Components
 Vue.component('home', require('./components/items/Home.vue').default);
+Vue.component('add-item', require('./components/items/AddItem.vue').default);
 Vue.component('change-password', require('./components/auth/ChangePassword.vue').default);
 
 /**
