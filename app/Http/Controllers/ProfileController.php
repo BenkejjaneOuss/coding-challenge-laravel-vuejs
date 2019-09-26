@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Auth;
-use Illuminate\Support\Facades\Hash;
-use \App\User;
+use App\Services\ProfileService;
+
 
 class ProfileController extends Controller
 {
@@ -14,9 +13,10 @@ class ProfileController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ProfileService $profile)
     {
         $this->middleware('auth');
+        $this->profile = $profile;
     }
 
     /**
@@ -35,19 +35,10 @@ class ProfileController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function changePassword(request $request){
+    public function changePassword(Request $request){
 
-        $result = false;
-
-        $user = User::where('email', Auth::user()->email)
-                        ->first();
-
-        $user->password = Hash::make($request->password);
-
-        if($user->save()){
-            $result = true;
-        }
-
+        
+        $result = $this->profile->changePwd($request);
         return Response()->json(compact('result'));  
     }
 

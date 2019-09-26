@@ -70,7 +70,7 @@
 
                     //Axios
                     axios.post(route('changePassword'), this.form).then(res => {
-
+                        console.log(res.data.result);
                         let type = 'error'
                         let title = 'Error!'
                         let text = (res.data.msg !== '') ? res.data.msg : 'Please retry later'

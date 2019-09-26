@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Item;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Auth;
-
+use App\Services\ItemsService;
 
 class ItemsController extends Controller
 {
@@ -16,9 +12,10 @@ class ItemsController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ItemsService $items)
     {
         $this->middleware('auth');
+        $this->items = $items;
     }
 
     /**
@@ -35,10 +32,9 @@ class ItemsController extends Controller
      * Get all items.
      *
      */
-    public function getItems($page)
+    public function getItems($skip)
     {
-        $skip = $page-1;
-        $items = Item::where('user_id', Auth::user()->id)->skip($skip)->take(10)->get();
+        $items = $this->items->getAll($skip);
         return Response()->json(compact('items')); 
     }
 
@@ -60,37 +56,7 @@ class ItemsController extends Controller
      */
     public function store(Request $request)
     {
-
-        $result = false;
-
-        $item = new Item();
-        $item->title = $request->title;
-        $item->description = $request->description;
-        $item->user_id 	= Auth::user()->id;
-
-        /*** Upload Image ***/
-        $name = time().'.' . explode('/', explode(':', substr($request->image, 0, strpos($request->image, ';')))[1])[1];
-        $data =  $request->image;
-        // RETRIEVE TYPE
-        list($type, $data)  = explode(";", $data);
-
-        // RETRIEVE IMG BASE64
-        list(, $data)   = explode(",", $data);
-        $data           = base64_decode($data);
-
-
-        $pathName       = storage_path('app/public/images/'.$name);
-
-        // CREATE AND MOVE NEW IMAGE IN DIRECTORY
-        if(file_put_contents($pathName, $data)){
-            $item->image = $name;
-        }
-        /*** End Upload Image ***/
-
-        if($item->save()){
-            $result = true;
-        }
-
+        $result = $this->items->addItem($request);
         return Response()->json(compact('result'));   
     }
 }

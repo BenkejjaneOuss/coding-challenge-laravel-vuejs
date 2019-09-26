@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
+use App\Services\ProfileService;
+
 class ChangePassword extends Command
 {
     /**
@@ -32,10 +34,11 @@ class ChangePassword extends Command
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(ProfileService $profile)
     {
         parent::__construct();
-        $this->user = $user;
+        $this->profile = $profile;
+
     }
 
     /**
@@ -46,7 +49,8 @@ class ChangePassword extends Command
     public function handle()
     {
         $details = $this->getDetails();
-        $admin = $this->user->changePassword($details);
+        $object = (object) $details;
+        $admin = $this->profile->changePwd($object);
         $this->display();
     }
 

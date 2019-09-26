@@ -1769,6 +1769,7 @@ __webpack_require__.r(__webpack_exports__);
         if (!_this.errors.any()) {
           //Axios
           axios.post(route('changePassword'), _this.form).then(function (res) {
+            console.log(res.data.result);
             var type = 'error';
             var title = 'Error!';
             var text = res.data.msg !== '' ? res.data.msg : 'Please retry later';
@@ -2003,7 +2004,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      page: 1,
+      nbskip: 1,
       list: []
     };
   },
@@ -2014,13 +2015,13 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       //axios
       axios.get(route('getItems', {
-        page: this.page
+        skip: this.nbskip
       })).then(function (res) {
         if (res.data.items.length) {
           var _this$list;
 
           //Adding 10 items
-          _this.page += 10;
+          _this.nbskip += 10;
 
           (_this$list = _this.list).push.apply(_this$list, _toConsumableArray(res.data.items));
 

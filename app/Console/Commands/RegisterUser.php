@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
+use App\Services\ProfileService;
 
 class RegisterUser extends Command
 {
@@ -33,7 +34,7 @@ class RegisterUser extends Command
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(ProfileService $user)
     {
         parent::__construct();
         $this->user = $user;

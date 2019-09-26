@@ -30,7 +30,7 @@
     export default {
         data() {
             return {
-                page: 1,
+                nbskip: 1,
                 list: [],
             }
         },
@@ -38,11 +38,11 @@
             //Infinite scrool
             infiniteHandler($state) {
                 //axios
-                axios.get(route('getItems', {page: this.page}))
+                axios.get(route('getItems', {skip: this.nbskip}))
                 .then(res => {
                     if (res.data.items.length) {
                         //Adding 10 items
-                        this.page += 10;
+                        this.nbskip += 10;
                         this.list.push(...res.data.items);
                         $state.loaded();
                     } else {

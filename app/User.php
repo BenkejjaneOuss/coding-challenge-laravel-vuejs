@@ -41,34 +41,4 @@ class User extends Authenticatable
     public function items() {
         return $this->hasMany('App\Alert');
     }
-
-    /**
-     * Create user.
-     *
-     * @param array $details
-     * @return array
-     */
-    public function createUser(array $details) : self
-    {
-        $user = new self($details);
-        $user->password = Hash::make($details['password']);
-        $user->save();
-        return $user;
-    }
-
-    /**
-     * Change password.
-     *
-     * @param array $details
-     * @return array
-     */
-    public function changePassword(array $details) : self
-    {
-        $user = User::where('email', $details['email'])
-                        ->first();
-        $user->password = Hash::make($details['password']);
-        $user->save();
-        return $user;
-    }
-
 }
